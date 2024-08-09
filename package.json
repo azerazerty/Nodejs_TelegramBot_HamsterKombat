@@ -1,0 +1,19 @@
+{
+  "name": "promocode",
+  "version": "1.0.0",
+  "description": "Hamster Kombat Promo Code Server",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Azer Azert Dz",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.3",
+    "express": "^4.19.2",
+    "https-proxy-agent": "^7.0.5",
+    "mongoose": "^8.5.2",
+    "node-cron": "^3.0.3",
+    "uuid": "^10.0.0"
+  }
+}
