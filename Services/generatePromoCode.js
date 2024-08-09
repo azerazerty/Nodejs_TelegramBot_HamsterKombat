@@ -1,3 +1,7 @@
+const { delay } = require("../Helpers/TimeHelper");
+const { v4: uuidv4 } = require("uuid");
+const axios = require("axios");
+
 const GAME_PROMO_API_BASE_URL = process.env.GAME_PROMO_API_BASE_URL;
 
 const login = async () => {
@@ -32,7 +36,7 @@ const login = async () => {
   }
 };
 
-const getCode = async (clientToken) => {
+const getCode = async (clientToken, promoId) => {
   try {
     const response = await axios.post(
       `${GAME_PROMO_API_BASE_URL}/create-code`,
@@ -58,7 +62,7 @@ const getCode = async (clientToken) => {
   }
 };
 
-const registerEvent = async (clientToken) => {
+const registerEvent = async (clientToken, promoId) => {
   const eventPayload = {
     promoId,
     eventId: uuidv4(),
@@ -93,7 +97,7 @@ const registerEvent = async (clientToken) => {
   }
 };
 
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+// const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const generatePromoCode = async (promoId) => {
   try {
@@ -121,7 +125,7 @@ const generatePromoCode = async (promoId) => {
     const promoCode = await getCode(clientToken, promoId);
     return promoCode;
   } catch (error) {
-    console.error("Main Error:", error.message);
+    console.error("GeneratePromoCode Error:", error.message);
     throw error;
   }
 };

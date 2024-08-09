@@ -1,7 +1,10 @@
+require("dotenv").config();
 const express = require("express");
-const axios = require("axios");
-const { v4: uuidv4 } = require("uuid");
+const cors = require("cors");
+// const axios = require("axios");
+// const { v4: uuidv4 } = require("uuid");
 const mongoose = require("mongoose");
+const TelegramBot = require("node-telegram-bot-api");
 const cron = require("node-cron");
 const CubePromoCode = require("./Models/CubePromoCodeModel"); // Import the promo code model
 const botListeningEvents = require("./botListeningEvents");
@@ -9,8 +12,8 @@ const generatePromoCode = require("./Services/generatePromoCode");
 
 const Port = process.env.PORT || 3000;
 const Telegram_Token = process.env.TELEGRAM_API_TOKEN;
-// const GAME_PROMO_API_BASE_URL = process.env.GAME_PROMO_API_BASE_URL;
 const DB = process.env.DB;
+// const GAME_PROMO_API_BASE_URL = process.env.GAME_PROMO_API_BASE_URL;
 
 const app = express();
 const bot = new TelegramBot(Telegram_Token, { polling: true });
@@ -19,10 +22,17 @@ botListeningEvents(bot);
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect(DB, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose
+  .connect(DB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then((conn) => {
+    console.log("Connected To DataBase");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 cron.schedule("* * * * *", async () => {
   try {
@@ -36,7 +46,7 @@ cron.schedule("* * * * *", async () => {
   }
 });
 
-app.get("/get-promo", async (req, res) => {
+app.get("/get-cube-promo", async (req, res) => {
   try {
     const promoCodes = await CubePromoCode.find({ isUsed: false }).limit(4);
     const promoCodesToReturn = promoCodes.map((promoCode) => promoCode.code);
